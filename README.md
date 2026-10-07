@@ -129,7 +129,7 @@ The notebooks work **locally only**: they read every input from `data/raw/` and 
 
 ```
 data/output/
-├── (*EMPTY*)
+├── (EMPTY)
 data/raw/
 ├── gadm41_PAK.gpkg                          GADM 4.1 Pakistan, GeoPackage (https://gadm.org/download_country.html)
 ├── pak_pop_2025_CN_100m_R2025A_v1.tif       WorldPop population counts, 100 m (hub.worldpop.org, id 74863)
@@ -138,7 +138,7 @@ data/raw/
     ├── Pakistan-node.shp (+ .dbf, .shx, .prj, .cpg)
     └── Pakistan-way.shp  (+ .dbf, .shx, .prj, .cpg)   healthsites.io extract (https://healthsites.io/)
 data/temp/
-├── (*EMPTY*)
+├── (EMPTY)
 ```
 
 ## How to
