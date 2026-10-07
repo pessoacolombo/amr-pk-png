@@ -2,7 +2,7 @@
 
 # Health facilities in Punjab (Pakistan): spatial distribution and surrounding population density
 
-The workflow presented here consists of two Python notebooks that map health facilities in Punjab, estimate the population density (inhabitants per hectare) within 500 m of each one, and export figures and GeoPackages:
+The workflow presented here consists of two Python notebooks that use open-access data to map health facilities in Punjab, estimate the population density (inhabitants per hectare) within 500 m of each one, and export figures and GeoPackages:
 
 - `notebooks/pharmacies_punjab_density.ipynb`: focus on pharmacies only. All mapped pharmacy points are kept as they are (242 in Punjab).
 - `notebooks/health_facilities_punjab_density.ipynb`: focus on pharmacies, clinics and hospitals, with density histograms separated by category. Nearby points are merged, so the pharmacy count is lower (198).
