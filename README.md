@@ -125,9 +125,11 @@ Density (inhabitants/ha) by category, notebook 2:
 
 ## Data architecture
 
-The notebooks work **locally only**: they read every input from `data/raw/` and do not download anything. If a file is missing, the first code cell stops with a message listing it. Download the data beforehand from the links above and place it as follows:
+The notebooks work **locally only**: they read every input from `data/raw/` and do not download anything. If a file is missing, the first code cell stops with a message listing it. Download the data beforehand from the links above and **place it in a new folder** with its contents structured as follows:
 
 ```
+data/output/
+├── (*EMPTY*)
 data/raw/
 ├── gadm41_PAK.gpkg                          GADM 4.1 Pakistan, GeoPackage (https://gadm.org/download_country.html)
 ├── pak_pop_2025_CN_100m_R2025A_v1.tif       WorldPop population counts, 100 m (hub.worldpop.org, id 74863)
@@ -135,6 +137,8 @@ data/raw/
 └── health-sites-io/
     ├── Pakistan-node.shp (+ .dbf, .shx, .prj, .cpg)
     └── Pakistan-way.shp  (+ .dbf, .shx, .prj, .cpg)   healthsites.io extract (https://healthsites.io/)
+data/temp/
+├── (*EMPTY*)
 ```
 
 ## How to
@@ -155,10 +159,10 @@ or open either notebook in JupyterLab and run all cells. Without conda, `pip ins
 # Repository structure
 
 ```
-environment.yml                                 conda environment (also requirements.txt for pip)
-notebooks/pharmacies_punjab_density.ipynb        workflow, pharmacies only
-notebooks/health_facilities_punjab_density.ipynb workflow, pharmacies + clinics + hospitals
-data/raw/                                   source data (healthsites.io files in health-sites-io/)
-data/temp/                                  intermediate files
-data/output/                                figures and GeoPackage
+environment.yml                                   conda environment (also requirements.txt for pip)
+notebooks/pharmacies_punjab_density.ipynb         workflow, pharmacies only
+notebooks/health_facilities_punjab_density.ipynb  workflow, pharmacies + clinics + hospitals
+data/raw/                                         source data (healthsites.io files in health-sites-io/)
+data/temp/                                        intermediate files
+data/output/                                      figures and GeoPackage
 ```
