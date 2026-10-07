@@ -1,11 +1,11 @@
 [![cc-by-shield](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-# Pharmacies in Punjab (Pakistan): spatial distribution and surrounding population density
+# Health facilities in Punjab (Pakistan): spatial distribution and surrounding population density
 
-Two Python notebooks that map health facilities in Punjab, estimate the population density (inhabitants per hectare) within 500 m of each one, and export figures and GeoPackages:
+The workflow presented here consists of two Python notebooks that map health facilities in Punjab, estimate the population density (inhabitants per hectare) within 500 m of each one, and export figures and GeoPackages:
 
-- `notebooks/pharmacies_punjab_density.ipynb`: pharmacies only.
-- `notebooks/health_facilities_punjab_density.ipynb`: pharmacies, clinics and hospitals, with density histograms separated by category.
+- `notebooks/pharmacies_punjab_density.ipynb`: focus on pharmacies only.
+- `notebooks/health_facilities_punjab_density.ipynb`: focus on pharmacies, clinics and hospitals, with density histograms separated by category.
 
 ## Previews
 
@@ -33,7 +33,7 @@ Two Python notebooks that map health facilities in Punjab, estimate the populati
 
 *Figure 4. Population density within 500 m of each facility, by category (20 bins per panel, shared bin edges and density axis). Dotted horizontal lines mark Q1, median and Q3 of each category.*
 
-## Outputs
+## Workflow
 
 ### Notebook 1: pharmacies
 
@@ -87,7 +87,7 @@ data/raw/
 6. **Map background.** The Degree of Urbanisation grid is reprojected to WGS 84 (nearest neighbour) and clipped to Punjab.
 7. **Plots and export.** Map and histogram are saved as JPEG at 400 dpi. Points and buffers, with their attributes, are written to the GeoPackage.
 
-## Category definition (notebook 2)
+### Category definition (notebook 2)
 
 A site is a pharmacy, clinic or hospital if `amenity` or `healthcare` equals `pharmacy`, `clinic` or `hospital`. A site matching several categories would be counted once (priority hospital > clinic > pharmacy); none did in this extract. Tag counts, Pakistan-wide: 874 pharmacies, 920 clinics, 2,492 hospitals.
 
@@ -123,18 +123,17 @@ Density (inhabitants/ha) by category, notebook 2:
 | Clinic (incl. other clinic) | 460 | 98.9 | 199.0 | 293.4 |
 | Hospital | 447 | 128.7 | 233.5 | 311.7 |
 
-## Checking the density values
+## Limitations
 
-Densities of 100 to 330 inhabitants/ha (quartile range) may look high, so the calculation was verified:
+- **Coverage.** Healthsites data are crowd-sourced (OpenStreetMap-based). The 242 pharmacies are very likely a small, spatially biased fraction of the real number in Punjab, concentrated in cities such as Lahore. Results describe the *mapped* pharmacies only.
+- **Facility tagging.** Categories rely on OSM tags, which are applied inconsistently. The hospital name filter removes most mis-tagged sites but can miss hospitals with names that contain none of the keywords (e.g. "Punjab Medical Center") and keep a few non-hospitals whose name contains "hospital". Merging can join distinct facilities that are very close (50 m for pharmacies and clinics, 250 m for hospitals); in Punjab the largest merged group is 9 pharmacies, likely a pharmacy market. The "other clinic" group is heterogeneous (labs, dental and herbal practices, unnamed sites). Two buffers fall at the raster edge and contain fewer than 60 valid pixels.
+- **Population layer.** WorldPop is a modelled estimate (100 m, 2025 population), not a census count.
+- **Projection.** Punjab spans UTM zones 42 and 43. Using zone 43 for all buffers introduces a small scale distortion (well under 1%) at the western edge.
+- **Histogram orientation.** Bars are horizontal (density on the y axis) so the horizontal dotted lines for Q1, median and Q3 sit on the density scale.
 
-- **Raster total.** WorldPop pixels summed over Punjab give 130.2 million people (2025), consistent with the 2023 census (about 128 million). Pixel values are people per pixel (max 410), with no negative values or no-data leakage (no-data is -99,999 and is masked out).
-- **Pixel area.** A 3 arc-second pixel is about 93 m x 80 m (0.74 ha) at 31°N, not 1 ha. A 500 m buffer (78.5 ha) therefore covers about 106 pixels (range 10 to 113 across all buffers). The density divides by the buffer area, not by a pixel count, so there is no pixel-size inflation.
-- **Independent recomputation.** For 40 randomly chosen facilities, the population of all pixels whose centre lies within 500 m (distance computed per pixel in UTM 43N) was summed and divided by the circle area (pi x 500 m squared = 78.5 ha). The notebook values match on average (ratio 0.999, minimum 0.955, maximum 1.000).
-- **Reference level.** Applying the same 500 m density to 1,500 random points in Punjab gives a mean of 6.4 inhabitants/ha (median 1.8; 1% of points above 100). This agrees with the province average (130.2 million people over about 20.5 million ha = 6.3/ha).
+# Reproducing the code
 
-The high values therefore come from where facilities are, not from the calculation. Mapped facilities are concentrated in cities such as Lahore, Rawalpindi and Faisalabad, where densities of 100 to 400 inhabitants/ha are plausible. Mapped facilities are in places that are on average about 35 times denser than a random location in Punjab. The "constrained" WorldPop product also places people only on built-up pixels, which raises local densities in settled areas.
-
-## Reproducing
+## Data architecture
 
 1. Put the raw data in `data/raw/` as described in [Raw data layout](#raw-data-layout).
 2. Create the environment and run the notebooks:
@@ -159,26 +158,3 @@ data/raw/                                   source data (healthsites.io files in
 data/temp/                                  intermediate files
 data/output/                                figures and GeoPackage
 ```
-
-## Limitations
-
-- **Coverage.** Healthsites data are crowd-sourced (OpenStreetMap-based). The 242 pharmacies are very likely a small, spatially biased fraction of the real number in Punjab, concentrated in cities such as Lahore. Results describe the *mapped* pharmacies only.
-- **Facility tagging.** Categories rely on OSM tags, which are applied inconsistently. The hospital name filter removes most mis-tagged sites but can miss hospitals with names that contain none of the keywords (e.g. "Punjab Medical Center") and keep a few non-hospitals whose name contains "hospital". Merging can join distinct facilities that are very close (50 m for pharmacies and clinics, 250 m for hospitals); in Punjab the largest merged group is 9 pharmacies, likely a pharmacy market. The "other clinic" group is heterogeneous (labs, dental and herbal practices, unnamed sites). Two buffers fall at the raster edge and contain fewer than 60 valid pixels.
-- **Population layer.** WorldPop is a modelled estimate (100 m, 2025 population), not a census count.
-- **Projection.** Punjab spans UTM zones 42 and 43. Using zone 43 for all buffers introduces a small scale distortion (well under 1%) at the western edge.
-- **Histogram orientation.** Bars are horizontal (density on the y axis) so the horizontal dotted lines for Q1, median and Q3 sit on the density scale.
-
-## License
-
-The code, text and original figures of this repository are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The input and derived data keep the terms of their providers, which should be checked before redistribution:
-
-- healthsites.io data are © OpenStreetMap contributors under the [ODbL](https://opendatacommons.org/licenses/odbl/) (attribution and share-alike apply to derived databases such as the GeoPackages).
-- WorldPop datasets are distributed under CC BY 4.0.
-- GADM data are free for academic and non-commercial use, and redistribution is not permitted without the authors' permission (see https://gadm.org/license.html). Link to the GADM download rather than committing `gadm41_PAK.gpkg` to a public repository.
-
-## Citations
-
-- Bondarenko M. et al. 2025. *Constrained estimates of 2015-2030 total number of people per grid square at a resolution of 3 arc (approximately 100m at the equator), R2025A v1.* WorldPop, University of Southampton. DOI: 10.5258/SOTON/WP00839
-- GADM, version 4.1, https://gadm.org
-- Healthsites.io / Global Healthsites Mapping Project, https://healthsites.io. Data © OpenStreetMap contributors, ODbL.
-- Bondarenko M. et al. 2026. *Degree of Urbanisation classes using WorldPop Global2 R2025A population data with the GHSL GHS-DUG tool.* WorldPop, University of Southampton. DOI: 10.5258/SOTON/WP00879
