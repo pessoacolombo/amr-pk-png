@@ -139,7 +139,7 @@ data/raw/
 
 ## How to
 
-1. Put the raw data in `data/raw/` as described in [Raw data layout](#raw-data-layout).
+1. Put the raw data in `data/raw/` as described in [Data architecture](#data-architecture).
 2. Create the environment and run the notebooks:
 
 ```bash
