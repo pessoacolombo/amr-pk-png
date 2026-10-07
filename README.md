@@ -4,8 +4,10 @@
 
 The workflow presented here consists of two Python notebooks that map health facilities in Punjab, estimate the population density (inhabitants per hectare) within 500 m of each one, and export figures and GeoPackages:
 
-- `notebooks/pharmacies_punjab_density.ipynb`: focus on pharmacies only.
-- `notebooks/health_facilities_punjab_density.ipynb`: focus on pharmacies, clinics and hospitals, with density histograms separated by category.
+- `notebooks/pharmacies_punjab_density.ipynb`: focus on pharmacies only. All mapped pharmacy points are kept as they are (242 in Punjab).
+- `notebooks/health_facilities_punjab_density.ipynb`: focus on pharmacies, clinics and hospitals, with density histograms separated by category. Nearby points are merged, so the pharmacy count is lower (198).
+
+> **Why the pharmacy numbers differ between the notebooks.** Both notebooks select the same 242 pharmacy points in Punjab. Notebook 2 then merges pharmacy points closer than 50 m (27 merged groups, largest: 9 points), which gives 198 pharmacies, whereas notebook 1 does not merge points and reports the raw count. As a result, the pharmacy density values also differ slightly (median 243.1 in notebook 1 versus 246.9 in notebook 2).
 
 ## Output preview
 
@@ -66,7 +68,7 @@ Intermediate files are in `data/temp/` (`pharmacies_punjab.gpkg`, `pharmacy_dens
 ### Spatial definitions
 
 1. **Boundary.** Punjab is selected from GADM level 1.
-2. **Facility selection.** Healthsites records with `amenity` or `healthcare` equal to `pharmacy` (notebook 1, 874 in Pakistan: 834 points and 40 polygons) or to `pharmacy`, `clinic` or `hospital` (notebook 2). Polygons are converted to centroids. Duplicates are removed on OSM type + id, and sites are kept if they fall within the Punjab polygon (242 pharmacies in notebook 1). Each is assigned to a GADM district. Notebook 2 then applies the refinements described in the next section.
+2. **Facility selection.** Healthsites records with `amenity` or `healthcare` equal to `pharmacy` (notebook 1, 874 in Pakistan: 834 points and 40 polygons) or to `pharmacy`, `clinic` or `hospital` (notebook 2). Polygons are converted to centroids. Duplicates are removed on OSM type + id, and sites are kept if they fall within the Punjab polygon (242 pharmacies; notebook 1 stops here, without merging). Each is assigned to a GADM district. Notebook 2 then applies the refinements described in the next section.
 3. **Buffers.** A 500 m buffer is built around each facility in a metric CRS (WGS 84 / UTM 43N, EPSG:32643). Every buffer has an area of about 78.5 ha.
 4. **Population.** WorldPop pixels whose centre falls inside a buffer are summed (windowed read per buffer).
 5. **Density.** `density_hab_ha = population in buffer / buffer area (ha)`.
@@ -113,7 +115,7 @@ Density (inhabitants/ha) by category, notebook 2:
 
 ## Limitations
 
-- **Coverage.** Healthsites data are crowd-sourced (OpenStreetMap-based). The 242 pharmacies are very likely a small, spatially biased fraction of the real number in Punjab, concentrated in cities such as Lahore. Results describe the *mapped* pharmacies only.
+- **Coverage.** Healthsites data are crowd-sourced (OpenStreetMap-based). The 242 (or 198 after merging) pharmacies are very likely a small, spatially biased fraction of the real number in Punjab, concentrated in cities such as Lahore. Results describe the *mapped* pharmacies only.
 - **Facility tagging.** Categories rely on OSM tags, which are applied inconsistently. The hospital name filter removes most mis-tagged sites but can miss hospitals with names that contain none of the keywords (e.g. "Punjab Medical Center") and keep a few non-hospitals whose name contains "hospital". Merging can join distinct facilities that are very close (50 m for pharmacies and clinics, 250 m for hospitals); in Punjab the largest merged group is 9 pharmacies, likely a pharmacy market. The "other clinic" group is heterogeneous (labs, dental and herbal practices, unnamed sites). Two buffers fall at the raster edge and contain fewer than 60 valid pixels.
 - **Population layer.** WorldPop is a modelled estimate (100 m, 2025 population), not a census count.
 - **Projection.** Punjab spans UTM zones 42 and 43. Using zone 43 for all buffers introduces a small scale distortion (well under 1%) at the western edge.
