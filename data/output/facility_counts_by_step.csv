@@ -1,0 +1,5 @@
+,pharmacy,clinic,hospital,total,of which other clinic
+"1. Tagged in healthsites.io, all Pakistan",874,920,2492,4286,0
+2. Inside Punjab,242,195,825,1262,0
+3. After hospital name filter (non-matching hospitals reclassified as other clinic),242,489,531,1262,294
+4. After merging nearby points (final),198,460,447,1105,272
