@@ -137,9 +137,9 @@ data/raw/
      ├── gadm41_PAK.gpkg                      GADM 4.1 Pakistan, GeoPackage (https://gadm.org/download_country.html)
      ├── pak_pop_2025_CN_100m_R2025A_v1.tif   WorldPop population counts, 100 m (hub.worldpop.org, id 74863)
      ├── PAK_DUG_2025_GRID_L1_R2025A_v1.tif   WorldPop / GHSL Degree of Urbanisation grid L1 (hub.worldpop.org, id 125011)
-     └── health-sites-io/
+     └── health-sites-io/                     healthsites.io extract (https://healthsites.io/)
          ├── Pakistan-node.shp (+ .dbf, .shx, .prj, .cpg)
-         └── Pakistan-way.shp  (+ .dbf, .shx, .prj, .cpg)   healthsites.io extract (https://healthsites.io/)
+         └── Pakistan-way.shp  (+ .dbf, .shx, .prj, .cpg)
 data/temp/
      ├── (EMPTY)
 ```
